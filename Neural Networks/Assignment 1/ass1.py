@@ -16,6 +16,14 @@ data = []
 data_xaxis = []
 data_yaxis = []
 model_complexity += 1
+_lambda = 0.545
+cal_training_errors = False
+errors_ytraining = []
+errors_xtraining = []
+data_yaxis_testing = []
+data_xaxis_testing = []
+errors_ytesting = []
+errors_xtesting = []
 #	...
 
 def _solve_first_question():
@@ -48,23 +56,30 @@ def _solve_first_question():
 		lines[0].set_color('red')
 	#plt.show()
 
-def solve_second_question():
+def solve_equations(data_x,data_y):
 	cons = np.zeros((model_complexity))
 	for j in range(model_complexity):
 		sum = 0
-		for n in range(len(data_xaxis)):
-			sum += data_yaxis[n] * (data_xaxis[n]**j)
+		for n in range(len(data_x)):
+			sum += data_y[n] * (data_x[n]**j)
 		cons[j] = sum
 	coeff = np.zeros((model_complexity, model_complexity))
 	for j in range(model_complexity):
 		for i in range(model_complexity):
 			sum = 0
-			for itr in range(len(data_yaxis)):
-				sum += data_xaxis[itr]**(i+j)
+			for itr in range(len(data_y)):
+				sum += data_x[itr]**(i+j)
 			coeff[j][i] = sum
+			if i == j:
+				coeff[j][i] += _lambda
 	solution = np.linalg.solve(coeff, cons)
-	print solution
+	return solution
 
+def solve_rest_question():
+	
+	global data_xaxis, data_yaxis, data_yaxis_testing, data_xaxis_testing
+	# print solution
+	solution = solve_equations(data_xaxis, data_yaxis)
 	fig1 = plt.figure("Estimated Function")
 	fig1_ax1 = fig1.add_subplot(111)
 	
@@ -84,21 +99,75 @@ def solve_second_question():
 	fig1_ax3 = fig1.add_subplot(111)
 	fig1_ax3.set_ylim(-1, 2)
 	fig1_ax3.plot(x,y)
-	plt.show()
+	
+def cal_errors():
+		global data_yaxis, data_xaxis, data_xaxis_testing,data_yaxis_testing
+		solution = solve_equations(data_xaxis_testing, data_yaxis_testing)
+		sum = 0
+		for n in range(len(data_yaxis_testing)):
+			temp = 0
+			for j in range(model_complexity):
+				temp += solution[j] * (data_xaxis_testing[n] ** j)
+			temp = data_yaxis_testing[n] - temp
+			sum += temp ** 2
+		sum /= len(data_xaxis_testing)
+		errors_ytesting.append(math.sqrt(sum))
+		errors_xtesting.append(model_complexity)
 
+		solution1 = solve_equations(data_xaxis, data_yaxis)
+		sum = 0
+		for n in range(len(data_yaxis)):
+			temp = 0
+			for j in range(model_complexity):
+				temp += solution1[j] * (data_xaxis[n] ** j)
+			temp = data_yaxis[n] - temp
+			sum += temp ** 2
+		sum /= len(data_xaxis)
+		errors_ytraining.append(math.sqrt(sum))
+		errors_xtraining.append(model_complexity)
+		return sum
+
+def plot_errors(errors_x, errors_y,errors_x1,errors_y1, name):
+	fig1 = plt.figure(name)
+	fig1_ax1 = fig1.add_subplot(111)
+	line1, = fig1_ax1.plot(errors_x, errors_y, label="Training")
+
+	fig_ax2 = fig1.add_subplot(111)
+	line2, = fig1_ax1.plot(errors_x1, errors_y1, label="Testing")
+	fig1.legend([line1, line2], ['Training', 'Testing'])
+	plt.show()
 
 def main():
 
+	global cal_training_errors
+	global model_complexity
 	for itr in range(size_sample):
 		data.append(uniform(_min_limit_, _max_limit_))
-	for itr in range(int(size_sample*_dividing_ratio_)):
-		if randint(0,100)%2 == 0:
-			data_yaxis.append(math.sin(data[itr]) + _intrinsic_noise)
+
+	for itr in range(size_sample):
+		if itr < int(size_sample*_dividing_ratio_):
+			if randint(0,100)%2 == 0:
+				data_yaxis.append(math.sin(data[itr]) + _intrinsic_noise)
+			else:
+				data_yaxis.append(math.sin(data[itr]) - _intrinsic_noise)
+			data_xaxis.append(data[itr])
 		else:
-			data_yaxis.append(math.sin(data[itr]) - _intrinsic_noise)
-		data_xaxis.append(data[itr])
-	# _solve_first_question()
-	solve_second_question()
+			if randint(0,100)%2 == 0:
+				data_yaxis_testing.append(math.sin(data[itr]) + _intrinsic_noise)
+			else:
+				data_yaxis_testing.append(math.sin(data[itr]) - _intrinsic_noise)
+			data_xaxis_testing.append(data[itr])
+	_solve_first_question()
+	solve_rest_question()
+
+	cal_training_errors = True
+	for j in range(15):
+		model_complexity = j
+		cal_errors()
+	print errors_ytraining
+	print errors_xtraining
+	plot_errors(errors_xtraining, errors_ytraining,errors_xtesting,errors_ytesting,"Question 2 Errors")
+
 
 if __name__ == '__main__':
 	main()
