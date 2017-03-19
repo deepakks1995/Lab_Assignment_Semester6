@@ -3,7 +3,6 @@ import discriminantFunc as disc
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-import copy
 
 data_classA = []
 data_classB = []
