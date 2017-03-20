@@ -2,6 +2,7 @@ import randomFunc
 import discriminantFunc as disc
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import math
 
 data_classA = []
@@ -34,11 +35,39 @@ def generate_data():
 def plot_curve():
 	global plotting_data
 	for i in range(len(plotting_data)):
-		x = y = []
+		x = []
+		y = []
 		x = [itr[0].tolist() for itr in plotting_data[i]]
 		y = [itr[1].tolist() for itr in plotting_data[i]]
 		plt.plot(x,y,plotting_type[i], color=plotting_color[i])
 	plt.show()
+	return True
+
+'''
+*	This function is to plot 3d curves with different types
+*	author: Deepak
+'''
+def plot_3d_curve(str):
+	global plotting_data
+	fig = plt.figure(str)
+	ax = fig.add_subplot(111, projection='3d')
+	for i in range(len(plotting_data)):
+		print plotting_data[i][0]
+		x = []
+		y = []
+		z = []
+		x = [itr[0]for itr in plotting_data[i]]
+		y = [itr[1] for itr in plotting_data[i]]
+		z = [itr[2] for itr in plotting_data[i]]
+		if plotting_type[i] != 'None':
+			ax.plot(x, y, z, plotting_type[i], color=plotting_color[i])
+		else:
+			ax.plot(x, y, z, color=plotting_color[i])
+	ax.set_xlabel('X Axis')
+	ax.set_ylabel('Y Axis')
+	ax.set_zlabel('Z Axis')
+	plt.show()
+	plt.pause(10)
 	return True
 
 '''
