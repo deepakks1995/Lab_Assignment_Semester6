@@ -39,7 +39,7 @@ def generate_data():
 
 '''
 *	This function is to implement a single update 
-*	perceptron learning algorithm
+*	perceptron learning algorithm using relaxation update
 *	author: Deepak
 '''
 def single_update_perceptron_learning():
@@ -47,27 +47,31 @@ def single_update_perceptron_learning():
 	itr = 0
 	w = np.zeros((4,1))
 	x = np.zeros((4,1))
+	b = 1
 	plt.ion()
-
+	neta_tmp = neta
 	while itr < no_of_data_points:
+		neta_tmp = neta / itr if itr!=0 else neta
 		x[0][0] = c1_x[itr]
 		x[1][0] = c1_y[itr]
 		x[2][0] = c1_z[itr]
 		x[3][0] = 1
-
+		norm = x[0][0]**2 +  x[1][0] **2 + x[2][0] ** 2 + x[3][0] ** 2
 		if (np.matmul(np.transpose(w), x)) <= 0:
-			w = w + neta * x
+			tmp = b - np.matmul(np.transpose(w), x)
+			tmp = (tmp[0][0] * x) / norm
+			w = w + neta_tmp * tmp
 			itr = -1
-			print w
-			print "finish"
 
 		x[0][0] = c2_x[0 if itr==-1 else itr]	
 		x[1][0] = c2_y[0 if itr==-1 else itr]	
 		x[2][0] = c2_z[0 if itr==-1 else itr]	
 		x[3][0] = 1
-
+		print w
 		if (np.matmul(np.transpose(w), x)) > 0:
-			w = w - neta * x 
+			tmp = b - np.matmul(np.transpose(w), x)
+			tmp = (tmp[0][0] * x) / norm
+			w = w + neta_tmp * tmp
 			itr = -1
 
 		itr += 1
@@ -94,12 +98,12 @@ def single_update_perceptron_learning():
 	add_plotting_data(data_classA, 'o', 'red')
 	add_plotting_data(data_classB, 'o', 'blue')
 	add_plotting_data(data, 'None', 'green')
-	plot_3d_curve("Single Update Perceptron Learning")
+	plot_3d_curve("Single Update Perceptron Using Relaxation Update")
 
 
 '''
 *	This function is to implement a single update 
-*	perceptron learning algorithm
+*	perceptron learning algorithm using relaxation update
 *	author: Deepak
 '''
 def batch_update_perceptron_learning():
@@ -109,8 +113,12 @@ def batch_update_perceptron_learning():
 	x = np.zeros((4,1))
 	plt.ion()
 	check = False
-	
+	b = 1
+	neta_tmp = neta
+	iterations = 0
 	while check != True:
+		print iterations
+		neta_tmp = neta / iterations if iterations!=0 else neta
 		itr = 0
 		error_points = []
 		check = True
@@ -120,7 +128,7 @@ def batch_update_perceptron_learning():
 			x[2][0] = c1_z[itr]
 			x[3][0] = 1
 			if (np.matmul(np.transpose(w), x)) <= 0:
-				error_points.append([c1_x[itr], c1_y[itr], c1_z[itr], True])
+				error_points.append([c1_x[itr], c1_y[itr], c1_z[itr]])
 				check = False
 
 			x[0][0] = c2_x[itr]	
@@ -129,20 +137,23 @@ def batch_update_perceptron_learning():
 			x[3][0] = 1
 
 			if (np.matmul(np.transpose(w), x)) > 0:
-				error_points.append([c2_x[itr], c2_y[itr], c2_z[itr], False])
+				error_points.append([c2_x[itr], c2_y[itr], c2_z[itr]])
 				check = False
 
 			itr += 1
-
+		sum = np.zeros((4,1))
 		for point in error_points:
 			x[0][0] = point[0]
 			x[1][0] = point[1]
 			x[2][0] = point[2]
 			x[3][0] = 1
-			if point[3]:
-				w = w + neta * x
-			else:
-				w = w - neta * x
+			norm = x[0][0]**2 +  x[1][0] **2 + x[2][0] ** 2 + x[3][0] ** 2
+			tmp = b - np.matmul(np.transpose(w), x)
+			tmp = (tmp[0][0] * x) / norm
+			sum += tmp
+		w = w + neta_tmp * sum
+
+		iterations += 1
 
 	# Plotting Curves
 	x1 = []
@@ -167,9 +178,9 @@ def batch_update_perceptron_learning():
 	add_plotting_data(data_classA, 'o', 'red')
 	add_plotting_data(data_classB, 'o', 'blue')
 	add_plotting_data(data, 'None', 'green')
-	plot_3d_curve("Batch Update Perceptron Learning")
+	plot_3d_curve("Batch Update Perceptron Using Relaxation Update")
 
 if __name__=="__main__":
 	generate_data()
-	# batch_update_perceptron_learning()
+	batch_update_perceptron_learning()
 	single_update_perceptron_learning()
