@@ -41,6 +41,7 @@ def plot_curve():
 		y = [itr[1].tolist() for itr in plotting_data[i]]
 		plt.plot(x,y,plotting_type[i], color=plotting_color[i])
 	plt.show()
+	plotting_data = []
 	return True
 
 '''
@@ -66,8 +67,11 @@ def plot_3d_curve(str):
 	ax.set_xlabel('X Axis')
 	ax.set_ylabel('Y Axis')
 	ax.set_zlabel('Z Axis')
-	plt.show()
-	plt.pause(10)
+	plt.draw()
+	plt.pause(5)
+	fig.clf()
+	plt.close()
+	plotting_data = []
 	return True
 
 '''
