@@ -4,7 +4,7 @@ from naiveBayes import plot_curve, add_plotting_data, plot_3d_curve, plotting_da
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
-import math
+import math,sys
 
 c1_x = []
 c1_y = []
@@ -58,8 +58,6 @@ def single_update_perceptron_learning():
 		if (np.matmul(np.transpose(w), x)) <= 0:
 			w = w + neta * x
 			itr = -1
-			print w
-			print "finish"
 
 		x[0][0] = c2_x[0 if itr==-1 else itr]	
 		x[1][0] = c2_y[0 if itr==-1 else itr]	
@@ -171,5 +169,8 @@ def batch_update_perceptron_learning():
 
 if __name__=="__main__":
 	generate_data()
-	# batch_update_perceptron_learning()
-	single_update_perceptron_learning()
+	type = sys.argv[1]
+	if type == 'Batch':
+		batch_update_perceptron_learning()
+	elif type == 'Single':
+		single_update_perceptron_learning()

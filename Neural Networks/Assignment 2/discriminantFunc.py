@@ -28,10 +28,4 @@ def get_discriminant(x, mean, sigma, probability):
 	ans = ans - (len(sigma)/2)*np.log(2*math.pi) - ( 0.5 * np.log(determinant) ) + np.log(probability)
 	return ans[0][0]
 
-# if __name__=="__main__":
-# 	x = [1,2,3,4,5]
-# 	mean = [1,2,3,4,5]
-# 	sigma = [1,2,3,4,5]
-# 	probability = 0.5
-# 	print get_discriminant(x, mean, sigma, probability)
 

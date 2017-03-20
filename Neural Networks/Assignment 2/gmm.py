@@ -41,7 +41,7 @@ def generate_data():
 		else:	
 			tmp = randomFunc.generate_N_random([x+i*multiplication_ratio for x in mean_classB], sigma_classB, 2, no_of_points - size_clusterB*i) 
 		naive.add_plotting_data(tmp, 'ro', colorB[i])
-	naive.plot_curve()
+	naive.plot_curve("GMM",[-1,6,-1,6])
 
 '''
 *	This function gives difference between the discriminant 

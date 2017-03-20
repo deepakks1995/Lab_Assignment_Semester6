@@ -26,21 +26,26 @@ def generate_data():
 	data_classB = randomFunc.generate_N_random(mean_classB, sigma_classB, 2, 100)
 	add_plotting_data(data_classA, 'ro', 'red')
 	add_plotting_data(data_classB, 'ro', 'blue')
-	plot_curve()
+	plot_curve("Naive Bayes",[-1,2.5,-1.5,2.5])
 
 '''
 *	This function is to plot curves with different types
 *	author: Deepak
 '''
-def plot_curve():
+def plot_curve(str,axis):
 	global plotting_data
+	fig = plt.figure(str)
+	ax = fig.add_subplot(111)
+	plt.axis(axis)
 	for i in range(len(plotting_data)):
 		x = []
 		y = []
 		x = [itr[0].tolist() for itr in plotting_data[i]]
 		y = [itr[1].tolist() for itr in plotting_data[i]]
-		plt.plot(x,y,plotting_type[i], color=plotting_color[i])
-	plt.show()
+		ax.plot(x,y,plotting_type[i], color=plotting_color[i])
+	plt.draw()
+	plt.pause(10)
+	fig.savefig("outputs/"+str+""+".png")
 	plotting_data = []
 	return True
 
@@ -53,7 +58,6 @@ def plot_3d_curve(str):
 	fig = plt.figure(str)
 	ax = fig.add_subplot(111, projection='3d')
 	for i in range(len(plotting_data)):
-		print plotting_data[i][0]
 		x = []
 		y = []
 		z = []
@@ -68,7 +72,8 @@ def plot_3d_curve(str):
 	ax.set_ylabel('Y Axis')
 	ax.set_zlabel('Z Axis')
 	plt.draw()
-	plt.pause(5)
+	plt.pause(10)
+	fig.savefig("outputs/"+str+""+".png")
 	fig.clf()
 	plt.close()
 	plotting_data = []
@@ -93,7 +98,7 @@ def add_plotting_data(x,str,color):
 def generate_naive_bayes_decision_boundary():
 	pos = []
 	neg = []
-	for i in np.arange(-1, 2.5, 0.01):
+	for i in np.arange(-1, 3, 0.01):
 		for j in np.arange(-1.5,2, 0.01):
 			diff = disc.get_discriminant([i,j], mean_classA, sigma_classA, 0.5) - disc.get_discriminant([i,j], mean_classB, sigma_classB, 0.5)
 			if  diff >= 0:
