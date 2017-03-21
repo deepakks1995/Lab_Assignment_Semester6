@@ -3,6 +3,7 @@ from discriminantFunc import get_discriminant
 from naiveBayes import plot_curve, add_plotting_data, plot_3d_curve, plotting_data
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from threading import Thread
 import numpy as np
 import math,sys
 
@@ -12,6 +13,8 @@ c1_z = []
 c2_x = []
 c2_y = []
 c2_z = []
+error_log_single = []
+error_log_batch = []
 no_of_data_points = 30
 mean_classA = [0,0,0]
 mean_classB = [4.5,4.5,4.5]
@@ -37,6 +40,29 @@ def generate_data():
 	c2_y = [x.tolist()[1] for x in data_classB]
 	c2_z = [x.tolist()[2] for x in data_classB]
 
+def check_error(w, total_iterations):
+	global error_log_single
+	x = np.zeros((4,1))
+	points_misclassified = 0
+	for itr in range(no_of_data_points):
+		x[0][0] = c1_x[itr]
+		x[1][0] = c1_y[itr]
+		x[2][0] = c1_z[itr]
+		x[3][0] = 1
+
+		if (np.matmul(np.transpose(w), x)) <= 0:
+			points_misclassified += 1
+
+		x[0][0] = c2_x[0 if itr==-1 else itr]	
+		x[1][0] = c2_y[0 if itr==-1 else itr]	
+		x[2][0] = c2_z[0 if itr==-1 else itr]	
+		x[3][0] = 1
+
+		if (np.matmul(np.transpose(w), x)) > 0:
+			points_misclassified += 1
+
+	error_log_single.append([total_iterations, points_misclassified])
+
 '''
 *	This function is to implement a single update 
 *	perceptron learning algorithm
@@ -44,10 +70,13 @@ def generate_data():
 '''
 def single_update_perceptron_learning():
 	global c1_x, c1_y, c1_z, c2_x, c2_y, c2_z
+	global error_log_single
+	error_log_single = []
 	itr = 0
 	w = np.zeros((4,1))
 	x = np.zeros((4,1))
 	plt.ion()
+	total_iterations = 0
 
 	while itr < no_of_data_points:
 		x[0][0] = c1_x[itr]
@@ -67,8 +96,9 @@ def single_update_perceptron_learning():
 		if (np.matmul(np.transpose(w), x)) > 0:
 			w = w - neta * x 
 			itr = -1
-
+		check_error(w, total_iterations)
 		itr += 1
+		total_iterations += 2
 	
 	x1 = []
 	y1 = []
@@ -102,12 +132,15 @@ def single_update_perceptron_learning():
 '''
 def batch_update_perceptron_learning():
 	global c1_x, c1_y, c1_z, c2_x, c2_y, c2_z
+	global error_log_batch
+	error_log_batch = []
 	itr = 0
 	w = np.zeros((4,1))
 	x = np.zeros((4,1))
 	plt.ion()
 	check = False
-	
+	total_iterations = 0
+
 	while check != True:
 		itr = 0
 		error_points = []
@@ -131,7 +164,7 @@ def batch_update_perceptron_learning():
 				check = False
 
 			itr += 1
-
+		error_log_batch.append([total_iterations, len(error_points)])
 		for point in error_points:
 			x[0][0] = point[0]
 			x[1][0] = point[1]
@@ -141,7 +174,7 @@ def batch_update_perceptron_learning():
 				w = w + neta * x
 			else:
 				w = w - neta * x
-
+		total_iterations += 1
 	# Plotting Curves
 	x1 = []
 	y1 = []
@@ -169,8 +202,10 @@ def batch_update_perceptron_learning():
 
 if __name__=="__main__":
 	generate_data()
-	type = sys.argv[1]
-	if type == 'Batch':
-		batch_update_perceptron_learning()
-	elif type == 'Single':
-		single_update_perceptron_learning()
+	single_update_perceptron_learning()
+	batch_update_perceptron_learning()
+	add_plotting_data(error_log_single, 'None', 'blue')
+	add_plotting_data(error_log_batch, 'None', 'red')
+	plot_curve("Error", False)
+	plt.show()
+	plt.pause(20)

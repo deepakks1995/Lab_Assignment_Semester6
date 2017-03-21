@@ -1,25 +1,25 @@
 Q4-a :
 	python -W ignore naiveBayes.py
+	$(MAKE) remove
 
 Q4-b :
 	python -W ignore gmm.py
+	$(MAKE) remove
 
-Q10-a :
-	python -W ignore perceptron.py Single
+Q10 :
+	python -W ignore perceptron.py
+	$(MAKE) remove
 
-Q10-b :
-	python -W ignore perceptron.py Batch
-
-Q11-a :
-	python -W ignore relaxationUpdatePerceptron.py Single
-
-Q11-b :
-	python -W ignore relaxationUpdatePerceptron.py Batch
+Q11 :
+	python -W ignore relaxationUpdatePerceptron.py
+	$(MAKE) remove
 
 full :
-	python -W ignore relaxationUpdatePerceptron.py Batch
-	python -W ignore relaxationUpdatePerceptron.py Single
-	python -W ignore perceptron.py Batch
-	python -W ignore perceptron.py Single
+	python -W ignore relaxationUpdatePerceptron.py
+	python -W ignore perceptron.py
 	python -W ignore naiveBayes.py
 	python -W ignore gmm.py
+	$(MAKE) remove
+	
+remove :
+	rm -f *.pyc

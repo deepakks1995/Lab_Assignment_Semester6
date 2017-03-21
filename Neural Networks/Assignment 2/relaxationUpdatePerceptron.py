@@ -37,6 +37,30 @@ def generate_data():
 	c2_y = [x.tolist()[1] for x in data_classB]
 	c2_z = [x.tolist()[2] for x in data_classB]
 
+
+def check_error(w, total_iterations):
+	global error_log_single
+	x = np.zeros((4,1))
+	points_misclassified = 0
+	for itr in range(no_of_data_points):
+		x[0][0] = c1_x[itr]
+		x[1][0] = c1_y[itr]
+		x[2][0] = c1_z[itr]
+		x[3][0] = 1
+
+		if (np.matmul(np.transpose(w), x)) <= 0:
+			points_misclassified += 1
+
+		x[0][0] = c2_x[0 if itr==-1 else itr]	
+		x[1][0] = c2_y[0 if itr==-1 else itr]	
+		x[2][0] = c2_z[0 if itr==-1 else itr]	
+		x[3][0] = 1
+
+		if (np.matmul(np.transpose(w), x)) > 0:
+			points_misclassified += 1
+
+	error_log_single.append([total_iterations, points_misclassified])
+
 '''
 *	This function is to implement a single update 
 *	perceptron learning algorithm using relaxation update
@@ -44,12 +68,16 @@ def generate_data():
 '''
 def single_update_perceptron_learning():
 	global c1_x, c1_y, c1_z, c2_x, c2_y, c2_z
+	global error_log_single
+	error_log_single = []
 	itr = 0
 	w = np.zeros((4,1))
 	x = np.zeros((4,1))
 	b = 1
 	plt.ion()
 	neta_tmp = neta
+	total_iterations = 0
+
 	while itr < no_of_data_points:
 		neta_tmp = neta / itr if itr!=0 else neta
 		x[0][0] = c1_x[itr]
@@ -72,8 +100,11 @@ def single_update_perceptron_learning():
 			tmp = (tmp[0][0] * x) / norm
 			w = w + neta_tmp * tmp
 			itr = -1
-
+		check_error(w, total_iterations)
 		itr += 1
+		total_iterations += 2
+		if total_iterations > 10000:
+			raise Exception("Unkown Exception Occured! Re-Run the Program to continue.....")
 	
 	x1 = []
 	y1 = []
@@ -107,6 +138,8 @@ def single_update_perceptron_learning():
 '''
 def batch_update_perceptron_learning():
 	global c1_x, c1_y, c1_z, c2_x, c2_y, c2_z
+	global error_log_batch
+	error_log_batch = []
 	itr = 0
 	w = np.zeros((4,1))
 	x = np.zeros((4,1))
@@ -140,6 +173,7 @@ def batch_update_perceptron_learning():
 
 			itr += 1
 		sum = np.zeros((4,1))
+		error_log_batch.append([iterations, len(error_points)])
 		for point in error_points:
 			x[0][0] = point[0]
 			x[1][0] = point[1]
@@ -152,6 +186,8 @@ def batch_update_perceptron_learning():
 		w = w + neta_tmp * sum
 
 		iterations += 1
+		if iterations > 10000:
+			raise Exception ("Unkown Exception Occured! Re-Run the Program to continue.....")
 
 	# Plotting Curves
 	x1 = []
@@ -178,10 +214,23 @@ def batch_update_perceptron_learning():
 	add_plotting_data(data, 'None', 'green')
 	plot_3d_curve("Batch Update Perceptron Using Relaxation Update")
 
-if __name__=="__main__":
-	generate_data()
-	type = sys.argv[1]
-	if type == 'Batch':
-		batch_update_perceptron_learning()
-	elif type == 'Single':
+def run_program():
+	try:
+		generate_data()
 		single_update_perceptron_learning()
+		batch_update_perceptron_learning()
+		add_plotting_data(error_log_single, 'None', 'blue')
+		add_plotting_data(error_log_batch, 'None', 'red')
+		plot_curve("Error", False)
+		plt.show()
+		plt.pause(20)
+	except Exception as e:
+		if str(e) == "Unkown Exception Occured! Re-Run the Program to continue.....":
+			print str(e)
+			print "Restarting the program........"
+			run_program()
+		else:
+			print str(e)
+
+if __name__=="__main__":
+	run_program()

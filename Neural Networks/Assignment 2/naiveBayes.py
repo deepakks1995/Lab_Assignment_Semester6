@@ -33,20 +33,25 @@ def generate_data():
 *	author: Deepak
 '''
 def plot_curve(str,axis):
-	global plotting_data
+	global plotting_data, plotting_type, plotting_color
 	fig = plt.figure(str)
 	ax = fig.add_subplot(111)
-	plt.axis(axis)
+	plt.axis(axis) if isinstance(axis, list) else True 
 	for i in range(len(plotting_data)):
 		x = []
 		y = []
-		x = [itr[0].tolist() for itr in plotting_data[i]]
-		y = [itr[1].tolist() for itr in plotting_data[i]]
-		ax.plot(x,y,plotting_type[i], color=plotting_color[i])
-	plt.draw()
-	plt.pause(10)
-	fig.savefig("outputs/"+str+""+".png")
+		x = [itr[0] for itr in plotting_data[i]]
+		y = [itr[1] for itr in plotting_data[i]]
+		if plotting_type[i] != 'None':
+			ax.plot(x,y,plotting_type[i], color=plotting_color[i])
+		else:
+			ax.plot(x,y,color=plotting_color[i])
+	# plt.draw()
+	# plt.pause(10)
+	# fig.savefig("outputs/"+str+""+".png")
 	plotting_data = []
+	plotting_color = []
+	plotting_type = []
 	return True
 
 '''
@@ -54,7 +59,7 @@ def plot_curve(str,axis):
 *	author: Deepak
 '''
 def plot_3d_curve(str):
-	global plotting_data
+	global plotting_data, plotting_type, plotting_color
 	fig = plt.figure(str)
 	ax = fig.add_subplot(111, projection='3d')
 	for i in range(len(plotting_data)):
@@ -71,12 +76,14 @@ def plot_3d_curve(str):
 	ax.set_xlabel('X Axis')
 	ax.set_ylabel('Y Axis')
 	ax.set_zlabel('Z Axis')
-	plt.draw()
-	plt.pause(10)
-	fig.savefig("outputs/"+str+""+".png")
-	fig.clf()
-	plt.close()
+	# plt.draw()
+	# plt.pause(10)
+	# fig.savefig("outputs/"+str+""+".png")
+	# fig.clf()
+	# plt.close()
 	plotting_data = []
+	plotting_color = []
+	plotting_type = []
 	return True
 
 '''
@@ -85,7 +92,7 @@ def plot_3d_curve(str):
 *	author: Deepak
 '''
 def add_plotting_data(x,str,color):
-	global plotting_data
+	global plotting_data, plotting_type, plotting_color
 	plotting_data.append(x)
 	plotting_type.append(str)
 	plotting_color.append(color)
@@ -111,3 +118,6 @@ def generate_naive_bayes_decision_boundary():
 
 if __name__ == "__main__":
 	generate_naive_bayes_decision_boundary()
+	plt.draw()
+	plt.pause(10)
+	plt.close()
