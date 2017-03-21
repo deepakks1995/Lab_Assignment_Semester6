@@ -32,7 +32,7 @@ def generate_data():
 			tmp = randomFunc.generate_N_random([x+i*multiplication_ratio for x in mean_classA], sigma_classA, 2, size_clusterA)
 		else:
 			tmp = randomFunc.generate_N_random([x+i*multiplication_ratio for x in mean_classA], sigma_classA, 2, no_of_points - size_clusterA*i)
-		naive.add_plotting_data(tmp,'ro', colorA[i])
+		naive.add_plotting_data(tmp,'ro', colorA[i],"Class A Shades")
 	
 	for i in range(clusterB):
 		tmp = []
@@ -40,8 +40,8 @@ def generate_data():
 			tmp = randomFunc.generate_N_random([x+i*multiplication_ratio for x in mean_classB], sigma_classB, 2, size_clusterB)
 		else:	
 			tmp = randomFunc.generate_N_random([x+i*multiplication_ratio for x in mean_classB], sigma_classB, 2, no_of_points - size_clusterB*i) 
-		naive.add_plotting_data(tmp, 'ro', colorB[i])
-	naive.plot_curve("GMM",[-1,6,-1,6])
+		naive.add_plotting_data(tmp, 'ro', colorB[i], "Class B Shades")
+	naive.plot_curve("GMM",[-1,6,-1,6],["X Axis", "Y Axis"])
 
 '''
 *	This function gives difference between the discriminant 
@@ -71,9 +71,11 @@ def generate_GMM_decision_boundary():
 				pos.append([i,j])
 			else:
 				neg.append([i,j])
-	naive.add_plotting_data(pos, '.', 'black')
-	naive.add_plotting_data(neg, '.', 'white')
+	naive.add_plotting_data(pos, '.', 'black', "Region A")
+	naive.add_plotting_data(neg, '.', 'white', "Region B")
 	generate_data()
 
 if __name__ == "__main__":
 	generate_GMM_decision_boundary()
+	plt.draw()
+	plt.pause(10)

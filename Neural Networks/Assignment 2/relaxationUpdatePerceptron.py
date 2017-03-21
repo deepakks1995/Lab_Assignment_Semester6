@@ -37,6 +37,11 @@ def generate_data():
 	c2_y = [x.tolist()[1] for x in data_classB]
 	c2_z = [x.tolist()[2] for x in data_classB]
 
+'''
+*	This function is to count number of points which are  
+*	misclassified with a given weight vector 
+*	author: Deepak
+'''
 
 def check_error(w, total_iterations):
 	global error_log_single
@@ -105,7 +110,7 @@ def single_update_perceptron_learning():
 		total_iterations += 2
 		if total_iterations > 10000:
 			raise Exception("Unkown Exception Occured! Re-Run the Program to continue.....")
-	
+	# Plotting Curves
 	x1 = []
 	y1 = []
 	z1 = []
@@ -115,7 +120,7 @@ def single_update_perceptron_learning():
 			y1.append(j)
 			z = (w[0][0]*i + w[1][0]*j +  w[3][0])/(-1*w[2][0])
 			z1.append(z)
-	# Plotting Curves		
+
 	data_classA = []
 	data_classB = []
 	data = []
@@ -125,9 +130,9 @@ def single_update_perceptron_learning():
 		data_classB.append([c2_x[i], c2_y[i], c2_z[i]])
 	for i in range(len(x1)):
 		data.append([x1[i], y1[i], z1[i]])
-	add_plotting_data(data_classA, 'o', 'red')
-	add_plotting_data(data_classB, 'o', 'blue')
-	add_plotting_data(data, 'None', 'green')
+	add_plotting_data(data_classA, 'o', 'red', "Class A")
+	add_plotting_data(data_classB, 'o', 'blue', "Class B")
+	add_plotting_data(data, 'None', 'green', "Plane")
 	plot_3d_curve("Single Update Perceptron Using Relaxation Update")
 
 
@@ -209,19 +214,23 @@ def batch_update_perceptron_learning():
 		data_classB.append([c2_x[i], c2_y[i], c2_z[i]])
 	for i in range(len(x1)):
 		data.append([x1[i], y1[i], z1[i]])
-	add_plotting_data(data_classA, 'o', 'red')
-	add_plotting_data(data_classB, 'o', 'blue')
-	add_plotting_data(data, 'None', 'green')
+	add_plotting_data(data_classA, 'o', 'red', "Class A")
+	add_plotting_data(data_classB, 'o', 'blue', "Class B")
+	add_plotting_data(data, 'None', 'green', "Plane")
 	plot_3d_curve("Batch Update Perceptron Using Relaxation Update")
 
+'''
+*	This function is to run program  
+*	author: Deepak
+'''
 def run_program():
 	try:
 		generate_data()
 		single_update_perceptron_learning()
 		batch_update_perceptron_learning()
-		add_plotting_data(error_log_single, 'None', 'blue')
-		add_plotting_data(error_log_batch, 'None', 'red')
-		plot_curve("Error", False)
+		add_plotting_data(error_log_single, 'None', 'blue', "Single Update")
+		add_plotting_data(error_log_batch, 'None', 'red', "Batch Update")
+		plot_curve("Error Rate", False, ["Iterations", "Misclassified Points"])
 		plt.show()
 		plt.pause(20)
 	except Exception as e:

@@ -49,6 +49,3 @@ def generate_N_random(mean, sigma, d, n):
 	for i in range(n):
 		list.append(generate_random(mean, sigma, d));
 	return list
-
-# if __name__=="__main__":
-# 	generate_N_random(np.array([1,2,3]), [1,2,3], 3, 5) 
