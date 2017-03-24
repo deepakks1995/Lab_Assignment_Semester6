@@ -72,7 +72,7 @@
 
 	motherinlaw(X, Y) <- married(Z, Y), mother(X, Z).
 
-18. Father-in-law(X, Y)  == X is father in law of Y
+18.	Father-in-law(X, Y)  == X is father in law of Y
 
 	fatherinlaw(X, Y)  <- married(Z, Y), father(X, Z).
 
@@ -80,11 +80,11 @@
 
 	soninlaw(X, Y) <- married(Z, X), parent(Y, Z), male(X).
 
-20. Daughter-in-law(X, Y) == X is daughter in law of Y
+20.	Daughter-in-law(X, Y) == X is daughter in law of Y
 
 	daughterinlaw(X, Y) <- married(Z, X), parent(Y,Z), female(X).
 
-21. GrandChild(X, Y)  == X is grandchild of Y
+21.	GrandChild(X, Y)  == X is grandchild of Y
 
 	grandchild(X, Y) <- parent(Z, X), parent(Y,Z).
 
