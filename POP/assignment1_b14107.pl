@@ -1,8 +1,11 @@
-#	Name : Deepak Sharma
-#   Roll No: B14107
+/**
+*	Name: Deepak Sharma
+*	Roll No: B14107
+*	
+*	The assignment comprises of two family trees, (both are represented by the comments at the start) 
+*	which are not related to each other by any means.
+*/
 
-
-# Defining Relations
 
 parent(X,Y) :- father(X, Y);mother(X, Y).
 
@@ -62,9 +65,9 @@ maternalaunt(X,Y):- sister(X,Z),mother(Z,Y).
 
 niece(X, Y) :- siblings(Z, Y), parent(Z, X), female(X).
 
-
-# Defining Facts
-# Father(Father, Person)
+% Defining Database
+% father (Father, Person)
+% First Family
 father(ashish, anuj).
 father(ashish, ashok).
 father(ashish, sophia).
@@ -82,7 +85,26 @@ father(mason, benjamin).
 father(anuj, amelia).
 father(lucas, scarlett).
 
-# Mother(Mother, Person)
+% Second Family
+father(alan, john).
+father(alan, tywin).
+father(alan, cersie).
+father(tyrion, alan).
+father(stannis, arya).
+father(john, charles).
+father(tyrion, leo).
+father(stannis, jordan).
+father(xavier, tyrion).
+father(xander, natalie).
+father(tyrion, elizabeth).
+father(xander, nolan).
+father(xander, claire).
+father(leo, christopher).
+father(john, katherine).
+father(stannis, jasmine).
+
+% mother(Mother, Person)
+% First Family
 mother(mia, jackson).
 mother(olivia, caden).
 mother(emma, mason).
@@ -99,7 +121,25 @@ mother(zoe, charlotte).
 mother(isabella, amelia).
 mother(olivia, scarlett).
 
-# Male(Person)
+% Second Family
+mother(catelyn, tyrion).
+mother(jean, jordan).
+mother(sansa, leo).
+mother(natalie, charles).
+mother(sansa, alan).
+mother(jean, arya).
+mother(arya, cersie).
+mother(arya, tywin).
+mother(arya, john).
+mother(victoria, natalie).
+mother(sansa, elizabeth).
+mother(victoria, nolan).
+mother(victoria, claire).
+mother(natalie, katherine).
+mother(jean, jasmine).
+
+% male(Person)
+% First Family
 male(ashish).
 male(ashok).
 male(jackson).
@@ -114,7 +154,22 @@ male(elijah).
 male(jack).
 male(benjamin).
 
-# Female(Person)
+% Second Family
+male(alan).
+male(tywin).
+male(tyrion).
+male(stannis).
+male(john).
+male(charles).
+male(leo).
+male(jordan).
+male(xavier).
+male(xander).
+male(nolan).
+male(christopher).
+
+% female(Person)
+% First Family
 female(sophia).
 female(neha).
 female(mia).
@@ -126,3 +181,16 @@ female(madison).
 female(charlotte).
 female(amelia).
 female(scarlett).
+
+% Second Family
+female(cersie).
+female(arya).
+female(catelyn).
+female(jean).
+female(sansa).
+female(natalie).
+female(victoria).
+female(elizabeth).
+female(claire).
+female(katherine).
+female(jasmine).
