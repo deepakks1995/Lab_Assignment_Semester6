@@ -1,0 +1,124 @@
+		Name = Deepak Sharma
+		Roll No = B14107
+		Branch	CSE
+
+
+1.	Parent(X,Y) == X is parent of Y
+	
+	parent(X,Y) :- father(X, Y);mother(X, Y).
+
+2.	Sister(X,Y) == X is a sister of Y
+	
+	sister(X,Y) :- female(X), parent(Z, X), parent(Z, Y).
+
+3.	Brother(X,Y) == X is brother of Y
+
+	brother(X, Y) :- parent(Z, X), parent(Z, Y), male(X).
+
+4.	GrandFather(X, Y) == X is GrandFather of Y
+
+	grandFather(X, Y) :- father(Z, Y), father(X, Z).
+
+5.	GrandMother(X, Y) == X is GrandMother of Y
+
+	grandmother(X, Y) :- father(Z, Y), mother(X, Z).    
+
+6.	GrandSon(X, Y) == X is GrandSon of Y
+	
+	grandson(X, Y) :- father(Z, X), parent(Y, Z).
+
+7.	Son(X, Y)	==	X is son of Y
+
+	son(X, Y) :- father(Y, X), male(X).
+
+8.	Uncle(X, Y)	==	X is uncle of Y
+
+	uncle(X, Y)	:- father(Z, Y), brother(X, Z).
+
+9.	Married (X, Y)	==	X is married to Y i.e they have a child in common
+
+	married(X, Y) :- parent(X, Z), parent(Y, Z), not(X = Y).
+
+10.	MaternalUncle(X, Y) == X is maternal Uncle of Y
+
+	maternaluncle(X, Y) :- mother(Z,Y), brother(X,Z).
+
+11.	Siblings(X, Y)  == X is sibling of Y
+
+	siblings(X, Y) :- parent(Z, Y), parent(Z, X), not(X = Y).	
+
+12.	Ancestor(X, Y) == X is an ancestor of Y
+
+	ancestor(X, Y) :- parent(X,Y);parent(X, Z), ancestor(Z, Y).
+
+13.	Nephew(X, Y) == X is nephew of Y
+	
+	nephew(X, Y) :- brother(Z, Y), father(Z, X).
+
+14.	Wife (X, Y) == X is wife of Y
+
+	wife(X, Y) :- married(X, Y), female(X).
+
+15.	Husband(X, Y) == X is husband of Y
+	
+	husband(X, Y) :- married(X, Y), male(X).
+
+16.	MaternalUncle(X,Y) == X is maternal Uncle of Y
+
+	maternaluncle(X, Y) :- mother(Z,Y), brother(X,Z).
+
+17.	Mother-in-Law(X, Y) == X is mother in law of Y
+
+	motherinlaw(X, Y) <- married(Z, Y), mother(X, Z).
+
+18.	Father-in-law(X, Y)  == X is father in law of Y
+
+	fatherinlaw(X, Y)  :- married(Z, Y), father(X, Z).
+
+19.	Son-in-law(X, Y)  == X is son in law of Y
+
+	soninlaw(X, Y) :- married(Z, X), parent(Y, Z), male(X).
+
+20.	Daughter-in-law(X, Y) == X is daughter in law of Y
+
+	daughterinlaw(X, Y) :- married(Z, X), parent(Y,Z), female(X).
+
+21.	GrandChild(X, Y)  == X is grandchild of Y
+
+	grandchild(X, Y) :- parent(Z, X), parent(Y,Z).
+
+22.	MaternalGrandFather(X, Y) == X is MaternalGrandFather of Y
+
+	maternalgrandFather(X, Y) :- mother(Z, Y), father(X, Z).
+
+23.	MaternalGrandMother(X, Y) == X is MaternalGrandMother of Y
+
+	maternalgrandmother(X, Y) :- mother(Z, Y), mother(X, Z).
+
+24.	Aunt(X, Y) == X is Aunt of Y
+
+	aunt(X, Y) :- father(Z, Y), brother(Z, X).
+
+25.	brother-in-law(X,Y) == X is brother-in-law of Y
+
+	brotherinlaw(X,Y) :- married(Z, Y), brother(X, Z).
+
+26.	Sister-in-law(X,Y) == X is sister-in-law of Y
+	
+	sisterinlaw(X,Y) :- married(Z, Y), sister(X, Z).
+
+27.	Cousin(X, Y) == X is cousin of Y
+
+	cousin(X,Y) :- parent(Z1, Y), parent(Z2, X), siblings(Z1, Z2).
+
+28.	Daughter(X, Y)  == X is daughter of Y
+
+	daughter(X, Y) :- parent(Y, X), female(X).
+
+29.	MaternalAunt(X,Y) == X is maternal Aunt of Y
+
+	maternalaunt(X,Y):- sister(X,Z),mother(Z,Y).
+
+30.	Niece(X, Y)  == X is niece of Y
+
+	niece(X, Y) :- siblings(Z, Y), parent(Z, X), female(X).
