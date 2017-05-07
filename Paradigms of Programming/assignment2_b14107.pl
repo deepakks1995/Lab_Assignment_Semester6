@@ -9,6 +9,46 @@
 search([who,is,the,R,of,X],[the,R,of,X,is,Y]) :- call(R,Y,X).
 search([whose,R,is,X],[X,is,the,R,of,Y]) :- call(R,Y,X).
 
+relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,1);relations(What, Name2, Name1,0,1).
+relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,2);relations(What, Name2, Name1,0,2).
+relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,3);relations(What, Name2, Name1,0,3).
+relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,4);relations(What, Name2, Name1,0,4).
+relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,5);relations(What, Name2, Name1,0,5).
+relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,6);relations(What, Name2, Name1,0,6).
+relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,7);relations(What, Name2, Name1,0,7).
+relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,8);relations(What, Name2, Name1,0,8).
+relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,9);relations(What, Name2, Name1,0,9).
+relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,10);relations(What, Name2, Name1,0,10).
+%relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,21);relations(What, Name2, Name1,0,21).
+
+
+relations(What, Name1, Name2,N,M):-
+  relation_facts(Facts, Name1, _),
+  relations1(Facts, [], Name2, What1,N,M),
+  atomic_list_concat(What1, What).
+
+relations1(Facts, Forbidden, Name2, What, N, M):-
+  not(N=M),N1 is N+1,
+  member(Relation, Facts),
+  call(Relation),
+  %writeq(Relation),nl,
+  relations2(Relation, Forbidden, Name2, What, N1, M).
+
+relations2(Relation, Forbidden, Right, [Left, ' ', is, ' ', Right, '''s ', Name], N, M):-
+  Relation =.. [Name, Left, Right],
+  Forbidden \= Right.
+relations2(Relation, Forbidden, Name2, [Left, ' ', is, ' '| What], N, M):-
+  Relation =.. [Name, Left, Right],
+  relation_facts(Facts, Right, _),
+  Forbidden\=Right,
+  not(N=M),N1 is N+1,
+  relations1(Facts, Left, Name2, [_,_,_,_, NRight|What1],N1, M),
+  append([NRight|What1], ['''s ', Name], What).
+  %writeq(N1).
+
+% Here goes the relations you want to check for:
+relation_facts([father(X,Y), mother(X,Y),siblings(X,Y),husband(X,Y),wife(X,Y),son(X,Y),daughter(X,Y)], X, Y). 
+
 parent(X,Y) :- father(X, Y);mother(X, Y).
 
 sister(X,Y) :- female(X), parent(Z, X), parent(Z, Y).
