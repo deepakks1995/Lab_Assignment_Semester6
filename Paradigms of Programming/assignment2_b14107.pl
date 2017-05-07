@@ -6,17 +6,8 @@
 *	which are not related to each other by any means.
 */
 
-convertStatement(Statement,Y) :-
-	[Who, is, the, R, of,X],
-	{ Statement =.. [R,X,Y]},
-	call(Statement).
-
-getInput :-
-	read_line_to_codes(user_input, L),
-	tokenize_atom(L,X),
-	write(X),nl,
-	phrase(convertStatement(Statement,Y), X).
-
+search([who,is,the,R,of,X],[the,R,of,X,is,Y]) :- call(R,Y,X).
+search([whose,R,is,X],[X,is,the,R,of,Y]) :- call(R,Y,X).
 
 parent(X,Y) :- father(X, Y);mother(X, Y).
 
