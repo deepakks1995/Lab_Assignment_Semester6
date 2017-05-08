@@ -1,25 +1,43 @@
 /**
 *	Name: Deepak Sharma
 *	Roll No: B14107
+*	Name: Kapardi Trivedi
+*	Roll No: B14110
 *	
 *	The assignment comprises of two family trees, (both are represented by the comments at the start) 
 *	which are not related to each other by any means.
 */
 
-search([who,is,the,R,of,X],[the,R,of,X,is,Y]) :- call(R,Y,X).
-search([whose,R,is,X],[X,is,the,R,of,Y]) :- call(R,Y,X).
+start:-
+	read_line_to_codes(user_input, L),
+	tokenize_atom(L,X),
+	iterate(X).
 
-relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,1);relations(What, Name2, Name1,0,1).
-relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,2);relations(What, Name2, Name1,0,2).
-relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,3);relations(What, Name2, Name1,0,3).
-relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,4);relations(What, Name2, Name1,0,4).
-relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,5);relations(What, Name2, Name1,0,5).
-relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,6);relations(What, Name2, Name1,0,6).
-relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,7);relations(What, Name2, Name1,0,7).
-relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,8);relations(What, Name2, Name1,0,8).
-relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,9);relations(What, Name2, Name1,0,9).
-relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,10);relations(What, Name2, Name1,0,10).
-%relationship(What, Name1, Name2):-relations(What, Name1, Name2,0,21);relations(What, Name2, Name1,0,21).
+printList([H|T]):-with_output_to(atom(Output), maplist(write, [H|T])),write(Output),nl.
+
+insert_space([],[]).
+insert_space([H|T],[H,' '|TC]):-insert_space(T,TC).
+
+iterate([R,Mid,X|T]):- relationFacts(R),Mid=of,firstQuery([who,is,the,R,of,X], Output),insert_space(Output,FinalOutput), printList(FinalOutput).
+iterate([R,Mid,X|T]):- relationFacts(R),Mid=is,firstQuery([whose,R,is,X], Output), insert_space(Output, FinalOutput),printList(FinalOutput).
+iterate([R,Mid,X|T]):- relationFacts(R),Mid=between,firstQuery([whose,R,is,X], Output), insert_space(Output, FinalOutput),printList(FinalOutput).
+iterate([R,Mid,X|T]):-	iterate([Mid,X|T]). 
+
+
+firstQuery([who,is,the,R,of,X],[the,R,of,X,is,Y]) :- call(R,Y,X).
+firstQuery([whose,R,is,X],[X,is,the,R,of,Y]) :- call(R,X,Y).
+
+findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,1);relations(What, Name2, Name1,0,1).
+findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,2);relations(What, Name2, Name1,0,2).
+findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,3);relations(What, Name2, Name1,0,3).
+findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,4);relations(What, Name2, Name1,0,4).
+findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,5);relations(What, Name2, Name1,0,5).
+findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,6);relations(What, Name2, Name1,0,6).
+findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,7);relations(What, Name2, Name1,0,7).
+findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,8);relations(What, Name2, Name1,0,8).
+findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,9);relations(What, Name2, Name1,0,9).
+findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,10);relations(What, Name2, Name1,0,10).
+%findRelationship(What, Name1, Name2):-relations(What, Name1, Name2,0,21);relations(What, Name2, Name1,0,21).
 
 
 relations(What, Name1, Name2,N,M):-
@@ -46,14 +64,13 @@ relations2(Relation, Forbidden, Name2, [Left, ' ', is, ' '| What], N, M):-
   append([NRight|What1], ['''s ', Name], What).
   %writeq(N1).
 
-% Here goes the relations you want to check for:
 relation_facts([father(X,Y), mother(X,Y),siblings(X,Y),husband(X,Y),wife(X,Y),son(X,Y),daughter(X,Y)], X, Y). 
 
 parent(X,Y) :- father(X, Y);mother(X, Y).
 
-sister(X,Y) :- female(X), parent(Z, X), parent(Z, Y).
+sister(X,Y) :- female(X), parent(Z, X), parent(Z, Y), not(X=Y).
 
-brother(X, Y) :- parent(Z, X), parent(Z, Y), male(X).
+brother(X, Y) :- parent(Z, X), parent(Z, Y), male(X), not(X=Y).
 
 grandFather(X, Y) :- father(Z, Y), father(X, Z).
 
@@ -107,6 +124,7 @@ maternalaunt(X,Y):- sister(X,Z),mother(Z,Y).
 
 niece(X, Y) :- siblings(Z, Y), parent(Z, X), female(X).
 
+
 % Defining Database
 % father (Father, Person)
 % First Family
@@ -127,6 +145,24 @@ father(mason, benjamin).
 father(anuj, amelia).
 father(lucas, scarlett).
 
+% mother(Mother, Person)
+% First Family
+mother(mia, jackson).
+mother(olivia, caden).
+mother(emma, mason).
+mother(isabella, logan).
+mother(emma, ashish).
+mother(olivia, neha).
+mother(neha, sophia).
+mother(neha, ashok).
+mother(neha, anuj).
+mother(zoe, isabella).
+mother(emma, madison).
+mother(zoe, jack).
+mother(zoe, charlotte).
+mother(isabella, amelia).
+mother(olivia, scarlett).
+
 % Second Family
 father(alan, john).
 father(alan, tywin).
@@ -145,23 +181,7 @@ father(leo, christopher).
 father(john, katherine).
 father(stannis, jasmine).
 
-% mother(Mother, Person)
-% First Family
-mother(mia, jackson).
-mother(olivia, caden).
-mother(emma, mason).
-mother(isabella, logan).
-mother(emma, ashish).
-mother(olivia, neha).
-mother(neha, sophia).
-mother(neha, ashok).
-mother(neha, anuj).
-mother(zoe, isabella).
-mother(emma, madison).
-mother(zoe, jack).
-mother(zoe, charlotte).
-mother(isabella, amelia).
-mother(olivia, scarlett).
+
 
 % Second Family
 mother(catelyn, tyrion).
@@ -236,3 +256,37 @@ female(elizabeth).
 female(claire).
 female(katherine).
 female(jasmine).
+
+
+
+relationFacts(parent).
+relationFacts(father).
+relationFacts(mother).
+relationFacts(sister).
+relationFacts(brother).
+relationFacts(grandFather).
+relationFacts(grandmother).
+relationFacts(grandson).
+relationFacts(son).
+relationFacts(uncle).
+relationFacts(married).
+relationFacts(maternaluncle).
+relationFacts(siblings).
+relationFacts(ancestor).
+relationFacts(nephew).
+relationFacts(wife).
+relationFacts(husband).
+relationFacts(motherinlaw).
+relationFacts(fatherinlaw).
+relationFacts(soninlaw).
+relationFacts(daughterinlaw).
+relationFacts(grandchild).
+relationFacts(maternalgrandFather).
+relationFacts(maternalgrandmother).
+relationFacts(aunt).
+relationFacts(brotherinlaw).
+relationFacts(sisterinlaw).
+relationFacts(cousin).
+relationFacts(daughter).
+relationFacts(maternalaunt).
+relationFacts(findRelationship).
