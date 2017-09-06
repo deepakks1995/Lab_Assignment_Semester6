@@ -1,0 +1,344 @@
+     1                                  %include "io.mac"
+     2                              <1> extern   proc_nwln, proc_PutCh, proc_PutStr
+     3                              <1> extern   proc_GetStr, proc_GetCh
+     4                              <1> extern   proc_PutInt, proc_GetInt
+     5                              <1> extern   proc_PutLInt, proc_GetLInt
+     6                              <1> 
+     7                              <1> ;;-------------------------------------------------------------------
+     8                              <1> %macro  .STARTUP  0
+     9                              <1> ;group dgroup .data .bss
+    10                              <1>         global   _start
+    11                              <1> _start:
+    12                              <1> %endmacro
+    13                              <1> ;;-------------------------------------------------------------------
+    14                              <1> 
+    15                              <1> 
+    16                              <1> ;;-------------------------------------------------------------------
+    17                              <1> %macro  .EXIT  0
+    18                              <1>         mov    EAX,1
+    19                              <1>         xor    EBX,EBX
+    20                              <1>         int    0x80
+    21                              <1> %endmacro
+    22                              <1> ;;-------------------------------------------------------------------
+    23                              <1> 
+    24                              <1> 
+    25                              <1> ;;-------------------------------------------------------------------
+    26                              <1> %macro  .DATA 0
+    27                              <1>         segment .data
+    28                              <1> %endmacro
+    29                              <1> ;;-------------------------------------------------------------------
+    30                              <1> 
+    31                              <1> ;;-------------------------------------------------------------------
+    32                              <1> %macro  .UDATA 0
+    33                              <1>         segment .bss
+    34                              <1> %endmacro
+    35                              <1> ;;-------------------------------------------------------------------
+    36                              <1> 
+    37                              <1> ;;-------------------------------------------------------------------
+    38                              <1> %macro  .CODE 0
+    39                              <1>         segment .data
+    40                              <1>         segment .bss
+    41                              <1>         segment .text
+    42                              <1> %endmacro
+    43                              <1> ;;-------------------------------------------------------------------
+    44                              <1> 
+    45                              <1> 
+    46                              <1> ;;-------------------------------------------------------------------
+    47                              <1> %macro  nwln  0 
+    48                              <1>         call    proc_nwln
+    49                              <1> %endmacro
+    50                              <1> ;;-------------------------------------------------------------------
+    51                              <1> 
+    52                              <1> 
+    53                              <1> ;;-------------------------------------------------------------------
+    54                              <1> %macro  PutCh  1 
+    55                              <1>         push    AX
+    56                              <1>         mov     AL,%1
+    57                              <1>         call    proc_PutCh
+    58                              <1>         pop     AX
+    59                              <1> %endmacro
+    60                              <1> ;;-------------------------------------------------------------------
+    61                              <1> 
+    62                              <1> 
+    63                              <1> ;;-------------------------------------------------------------------
+    64                              <1> %macro  PutStr  1 
+    65                              <1>         push    ECX
+    66                              <1>         mov     ECX,%1
+    67                              <1>         call    proc_PutStr
+    68                              <1>         pop     ECX
+    69                              <1> %endmacro
+    70                              <1> ;;-------------------------------------------------------------------
+    71                              <1> 
+    72                              <1> 
+    73                              <1> ;;-------------------------------------------------------------------
+    74                              <1> %macro  GetStr  1-2 81
+    75                              <1>         push    ESI
+    76                              <1>         push    EDI
+    77                              <1>         mov     EDI,%1
+    78                              <1>         mov     ESI,%2
+    79                              <1>         call    proc_GetStr
+    80                              <1>         pop     EDI
+    81                              <1>         pop     ESI
+    82                              <1> %endmacro
+    83                              <1> ;;-------------------------------------------------------------------
+    84                              <1> 
+    85                              <1> 
+    86                              <1> ;;-------------------------------------------------------------------
+    87                              <1> %macro  GetCh   1
+    88                              <1>         push    SI
+    89                              <1>         xor     SI,SI
+    90                              <1> %ifidni %1,AL
+    91                              <1>         ;inc     SI
+    92                              <1>         call    proc_GetCh
+    93                              <1> %elifidni %1,AH
+    94                              <1>         mov     SI,1
+    95                              <1>         call    proc_GetCh
+    96                              <1> %else
+    97                              <1>         push    AX
+    98                              <1>         call    proc_GetCh
+    99                              <1>         mov     %1,AL
+   100                              <1>         pop     AX
+   101                              <1> %endif
+   102                              <1>         pop     SI
+   103                              <1> %endmacro
+   104                              <1> ;;-------------------------------------------------------------------
+   105                              <1> 
+   106                              <1> 
+   107                              <1> ;;-------------------------------------------------------------------
+   108                              <1> %macro  PutInt  1
+   109                              <1>         push    AX
+   110                              <1>         mov     AX,%1
+   111                              <1>         call    proc_PutInt
+   112                              <1>         pop     AX
+   113                              <1> %endmacro
+   114                              <1> ;;-------------------------------------------------------------------
+   115                              <1> 
+   116                              <1> 
+   117                              <1> ;;-------------------------------------------------------------------
+   118                              <1> %macro  GetInt  1
+   119                              <1> %ifnidni %1,AX
+   120                              <1>         push    AX
+   121                              <1>         call    proc_GetInt
+   122                              <1>         mov     %1,AX
+   123                              <1> 	  pop     AX
+   124                              <1> %else 
+   125                              <1>         call  proc_GetInt
+   126                              <1> %endif
+   127                              <1> %endmacro
+   128                              <1> ;;-------------------------------------------------------------------
+   129                              <1> 
+   130                              <1> ;;-------------------------------------------------------------------
+   131                              <1> %macro  PutLInt  1
+   132                              <1>         push    EAX
+   133                              <1>         mov     EAX,%1
+   134                              <1>         call    proc_PutLInt
+   135                              <1>         pop     EAX
+   136                              <1> %endmacro
+   137                              <1> ;;-------------------------------------------------------------------
+   138                              <1> 
+   139                              <1> ;;-------------------------------------------------------------------
+   140                              <1> %macro  GetLInt  1
+   141                              <1> %ifnidni %1,EAX
+   142                              <1>         push    EAX
+   143                              <1>         call    proc_GetLInt
+   144                              <1>         mov     %1,EAX
+   145                              <1> 	  pop     EAX
+   146                              <1> %else 
+   147                              <1>         call  proc_GetLInt
+   148                              <1> %endif
+   149                              <1> %endmacro
+   150                              <1> ;;-------------------------------------------------------------------
+   151                              <1> 
+   152                                  
+   153                                  .DATA
+   154                              <1>  segment .data
+   155 00000000 506C6561736520696E-     	prompt_msg1  db   "Please input matrix A", 0
+   156 00000009 707574206D61747269-
+   157 00000012 78204100           
+   158 00000016 506C6561736520696E-     	prompt_msg2  db   "Please input matrix B", 0
+   159 0000001F 707574206D61747269-
+   160 00000028 78204200           
+   161 0000002C 4C656E677468206F66-     	prompt_msg3  db	  "Length of matriceS: ",0
+   162 00000035 206D61747269636553-
+   163 0000003E 3A2000             
+   164 00000041 486569676874206F66-     	prompt_msg4  db	  "Height of matrices: ",0	
+   165 0000004A 206D61747269636573-
+   166 00000053 3A2000             
+   167 00000056 4D6174726978204320-     	prompt_msg6  db   "Matrix C is:", 0x0A, 0
+   168 0000005F 69733A0A00         
+   169                                  
+   170                                  .UDATA
+   171                              <1>  segment .bss
+   172 00000000 <res 00000190>          	arrA	resd	100
+   173 00000190 <res 00000190>          	arrB	resd	100
+   174 00000320 <res 00000190>          	arrC	resd	100
+   175 000004B0 <res 00000004>          	len 	resd	1
+   176 000004B4 <res 00000004>          	wid 	resd	1
+   177                                  
+   178                                  .CODE
+   179                              <1>  segment .data
+   180                              <1>  segment .bss
+   181                              <1>  segment .text
+   182                                  	.STARTUP
+   183                              <1> 
+   184                              <1>  global _start
+   185                              <1> _start:
+   186                                  
+   187                                  	PutStr prompt_msg3;
+   188 00000000 51                  <1>  push ECX
+   189 00000001 B9[2C000000]        <1>  mov ECX,%1
+   190 00000006 E8(00000000)        <1>  call proc_PutStr
+   191 0000000B 59                  <1>  pop ECX
+   192                                  	GetLInt EAX;
+   193                              <1> %ifnidni %1,EAX
+   194                              <1>  push EAX
+   195                              <1>  call proc_GetLInt
+   196                              <1>  mov %1,EAX
+   197                              <1>  pop EAX
+   198                              <1> %else
+   199 0000000C E8(00000000)        <1>  call proc_GetLInt
+   200                              <1> %endif
+   201 00000011 A3[B0040000]            	mov [len], EAX;
+   202 00000016 31C0                    	XOR EAX,EAX;
+   203                                  	PutStr prompt_msg4;
+   204 00000018 51                  <1>  push ECX
+   205 00000019 B9[41000000]        <1>  mov ECX,%1
+   206 0000001E E8(00000000)        <1>  call proc_PutStr
+   207 00000023 59                  <1>  pop ECX
+   208                                  	GetLInt	EAX
+   209                              <1> %ifnidni %1,EAX
+   210                              <1>  push EAX
+   211                              <1>  call proc_GetLInt
+   212                              <1>  mov %1,EAX
+   213                              <1>  pop EAX
+   214                              <1> %else
+   215 00000024 E8(00000000)        <1>  call proc_GetLInt
+   216                              <1> %endif
+   217 00000029 A3[B4040000]            	mov [wid] , EAX
+   218                                  
+   219                                  	PutStr prompt_msg1
+   220 0000002E 51                  <1>  push ECX
+   221 0000002F B9[00000000]        <1>  mov ECX,%1
+   222 00000034 E8(00000000)        <1>  call proc_PutStr
+   223 00000039 59                  <1>  pop ECX
+   224                                  	nwln
+   225 0000003A E8(00000000)        <1>  call proc_nwln
+   226 0000003F BE[00000000]            	mov ESI, arrA
+   227 00000044 E853000000              	call read
+   228                                  
+   229                                  	PutStr prompt_msg2
+   230 00000049 51                  <1>  push ECX
+   231 0000004A B9[16000000]        <1>  mov ECX,%1
+   232 0000004F E8(00000000)        <1>  call proc_PutStr
+   233 00000054 59                  <1>  pop ECX
+   234                                  	nwln
+   235 00000055 E8(00000000)        <1>  call proc_nwln
+   236 0000005A BE[90010000]            	mov ESI,arrB
+   237 0000005F E838000000              	call read
+   238                                  
+   239 00000064 BE[00000000]            	mov ESI, arrA
+   240 00000069 BF[90010000]            	mov EDI, arrB
+   241 0000006E E899000000              	call matrix_add
+   242                                  
+   243                                  
+   244                                  	PutStr prompt_msg6
+   245 00000073 51                  <1>  push ECX
+   246 00000074 B9[56000000]        <1>  mov ECX,%1
+   247 00000079 E8(00000000)        <1>  call proc_PutStr
+   248 0000007E 59                  <1>  pop ECX
+   249                                  	nwln
+   250 0000007F E8(00000000)        <1>  call proc_nwln
+   251 00000084 BE[20030000]            	mov ESI, arrC
+   252 00000089 E83E000000              	call print_matrix
+   253                                  	nwln
+   254 0000008E E8(00000000)        <1>  call proc_nwln
+   255                                  
+   256                                  	.EXIT
+   257 00000093 B801000000          <1>  mov EAX,1
+   258 00000098 31DB                <1>  xor EBX,EBX
+   259 0000009A CD80                <1>  int 0x80
+   260                                  
+   261                                  	read:
+   262 0000009C 31C0                    		xor EAX,EAX
+   263 0000009E 31C9                    		xor ECX,ECX
+   264                                  
+   265                                  		loop_read:
+   266 000000A0 89C1                    			mov ECX,EAX
+   267 000000A2 0FAF0D[B4040000]        			imul ECX, [wid]
+   268 000000A9 31DB                    			xor EBX,EBX
+   269                                  			
+   270                                  			row_read:
+   271 000000AB 01D9                    				add ECX,EBX		;	EBX = j && ECX = i*wid + j
+   272                                  				GetLInt EDX
+   273                              <1> %ifnidni %1,EAX
+   274 000000AD 50                  <1>  push EAX
+   275 000000AE E8(00000000)        <1>  call proc_GetLInt
+   276 000000B3 89C2                <1>  mov %1,EAX
+   277 000000B5 58                  <1>  pop EAX
+   278                              <1> %else
+   279                              <1>  call proc_GetLInt
+   280                              <1> %endif
+   281 000000B6 89148E                  				mov [ESI + ECX*4], EDX
+   282 000000B9 43                      				inc EBX
+   283 000000BA 3B1D[B4040000]          				cmp EBX,[wid]
+   284 000000C0 75E9                    				jne row_read
+   285                                  
+   286 000000C2 40                      			inc EAX		;	EAX == i for comparing lenth
+   287 000000C3 3B05[B0040000]          			cmp EAX,[len]
+   288 000000C9 75D5                    			jne loop_read
+   289 000000CB C3                      		ret;
+   290                                  
+   291                                  	print_matrix:		; function to print matrix C
+   292 000000CC 31C0                    		xor EAX,EAX
+   293 000000CE 31C9                    		xor ECX,ECX
+   294                                  			loop_ROW:
+   295                                  				nwln
+   296 000000D0 E8(00000000)        <1>  call proc_nwln
+   297 000000D5 89C1                    				mov ECX,EAX
+   298 000000D7 0FAF0D[B4040000]        				imul ECX,[wid]
+   299 000000DE 31DB                    				xor EBX,EBX
+   300                                  
+   301                                  				row_print:
+   302 000000E0 01D9                    					add ECX,EBX
+   303 000000E2 8B148E                  					mov EDX, [ESI + ECX*4]
+   304                                  					PutLInt EDX
+   305 000000E5 50                  <1>  push EAX
+   306 000000E6 89D0                <1>  mov EAX,%1
+   307 000000E8 E8(00000000)        <1>  call proc_PutLInt
+   308 000000ED 58                  <1>  pop EAX
+   309                                  					PutCh ' '
+   310 000000EE 6650                <1>  push AX
+   311 000000F0 B020                <1>  mov AL,%1
+   312 000000F2 E8(00000000)        <1>  call proc_PutCh
+   313 000000F7 6658                <1>  pop AX
+   314 000000F9 43                      					inc EBX
+   315 000000FA 3B1D[B4040000]          					cmp EBX, [wid]
+   316 00000100 75DE                    					jne row_print
+   317 00000102 40                      				inc EAX
+   318 00000103 3B05[B0040000]          				cmp EAX,[len]
+   319 00000109 75C5                    				jne loop_ROW;
+   320 0000010B C3                      			ret;
+   321                                  
+   322                                  	matrix_add:			; Function to add matrix A and matrix B
+   323 0000010C 31C0                    		xor eax,eax
+   324 0000010E 31C9                    		xor ecx,ecx
+   325                                  
+   326                                  			loop:
+   327 00000110 89C1                    				mov ecx,eax
+   328 00000112 0FAF0D[B4040000]        				imul ecx,[wid]
+   329 00000119 31DB                    				xor ebx,ebx
+   330                                  					add:
+   331 0000011B 01D9                    						add ecx,ebx
+   332 0000011D 8B148E                  						mov edx, [esi + ecx*4]
+   333 00000120 03148F                  						add edx, [edi + ecx*4]
+   334                                  
+   335 00000123 89148D[20030000]        						mov [arrC + ecx*4], edx
+   336 0000012A 43                      						inc ebx
+   337 0000012B 3B1D[B4040000]          						cmp ebx, [wid]
+   338 00000131 75E8                    						jne add
+   339 00000133 40                      				inc eax
+   340 00000134 3B05[B0040000]          				cmp eax,[len]
+   341 0000013A 75D4                    				jne loop
+   342 0000013C C3                      			ret
+   343                                  
+   344                                  

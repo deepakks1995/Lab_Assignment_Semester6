@@ -1,0 +1,58 @@
+#include <time.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+void * empty(){
+
+}
+void Createprocess(){
+    int count=0;
+    pid_t pid=fork();
+    while(pid>0 && count<=100000){
+        //printf("I am at count : %d \n",count);
+        count++;
+        pid=fork();
+    }
+    if(pid==0){/*printf("",pid);*/exit(1);
+	}
+}
+void Createthreads(){
+
+    pthread_t pth[100001];  // this is our thread identifier
+    int i = 0;
+
+    
+    
+    while(i <= 100000)
+    {
+        pthread_create(&pth[i],NULL,empty,NULL);
+       // printf(" %d \n",i);
+        i++;
+    }
+
+
+}
+int main(int argc, char **argv)
+{
+   
+    clock_t start = clock(), diff;
+    
+    Createprocess();
+    diff = clock() - start;
+     int msec1 = diff * 1000 / CLOCKS_PER_SEC;
+   
+    
+    start=clock();
+    Createthreads();
+    diff = clock() - start;
+    int msec2 = diff * 1000 / CLOCKS_PER_SEC;
+    
+    printf("Time taken for 10000 process creation %d seconds %d milliseconds\n", msec1/1000, msec1%1000);
+       printf("Time taken for 10000 threads creation %d seconds %d milliseconds\n", msec2/1000, msec2%1000);
+   
+
+   return 0;
+}
+
