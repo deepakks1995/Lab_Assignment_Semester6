@@ -1,0 +1,37 @@
+FDA IMAGE
+cluster = 1 2 ...
+confusion_matrix =
+
+   60   17   13
+    9   68    5
+   21   16   40
+
+acc =  0.67470
+
+FDA LS
+
+cluster =1 2 .....
+
+numOfClasses =  3
+clusters =  1
+confusion_matrix =
+
+   125     0     0
+     0   125     0
+     0     2   123
+
+acc =  0.99467
+ 
+FDA RD
+
+cluster =1 2 .....
+
+numOfClasses =  3
+
+confusion_matrix =
+
+   546    68     0
+    62   560     0
+    12    18   543
+
+acc =  0.91155

@@ -1,0 +1,68 @@
+ans =
+
+   5424      2
+
+lambda =
+
+   7.5503e+03
+   3.5582e+05
+
+reducedQ =
+
+   0   1
+
+ans =
+
+   2454      1
+
+ans =
+
+   2488      1
+
+ans =
+
+   2291      1
+
+classifier starts ..
+GMM Starts...\n
+kmeans starts...\n
+Kmeans ends...\n
+Mean =  855.28
+Cov =    1.1343e+04
+Pi =  1
+final
+Mean =  855.28
+Cov =    1.1343e+04
+Pi =  1
+u =  2
+GMM ends...\n
+GMM Starts...\n
+kmeans starts...\n
+Kmeans ends...\n
+Mean =  761.89
+Cov =  6128.2
+Pi =  1
+final
+Mean =  761.89
+Cov =  6128.2
+Pi =  1
+u =  2
+GMM ends...\n
+GMM Starts...\n
+kmeans starts...\n
+Kmeans ends...\n
+Mean =  2072.2
+Cov =  8136.2
+Pi =  1
+final
+Mean =  2072.2
+Cov =  8136.2
+Pi =  1
+u =  2
+GMM ends...\n
+a =
+
+   312   302     0
+    73   549     0
+    13     7   553
+

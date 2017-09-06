@@ -1,0 +1,36 @@
+no. of iterations = 115
+num_classes =  3
+confusionMatrix =
+
+   125    0    0
+    0   125    0
+    0    0    125
+
+accuracy =  1
+
+no. of iterations = 110
+num_classes =  3
+confusionMatrix =
+
+   125    0    0
+    0   125    0
+    0    1    124
+
+
+no. of iterations =90
+num_classes =  3
+confusionMatrix =
+
+   125    0    0
+    0   125    0
+    0    2    123
+
+
+no. of iterations = 60
+num_classes =  3
+confusionMatrix =
+
+   125    0    0
+    0   125    0
+    0    6    119
+
